@@ -32,6 +32,7 @@ class Employee
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Assert\GreaterThanOrEqual('now')]
     private ?\DateTimeImmutable $employedAt = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 16, scale: 4)]
@@ -103,13 +104,13 @@ class Employee
         return $this;
     }
 
-    #[Assert\Callback]
-    public function validateEmployedAt(ExecutionContextInterface $context,  $payload): void
-    {
-        if ($this->employedAt->getTimestamp() < time() ) {
-            $context->buildViolation('Employee cannot be employed in the past')
-                ->atPath('employedAt')
-                ->addViolation();
-        }
-    }
+//    #[Assert\Callback]
+//    public function validateEmployedAt(ExecutionContextInterface $context,  $payload): void
+//    {
+//        if ($this->employedAt->getTimestamp() < time() ) {
+//            $context->buildViolation('Employee cannot be employed in the past')
+//                ->atPath('employedAt')
+//                ->addViolation();
+//        }
+//    }
 }

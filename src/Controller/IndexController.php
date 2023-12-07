@@ -15,6 +15,21 @@ class IndexController extends AbstractController
     #[Route('/')]
     public function homepage(EntityManagerInterface $entityManager, ValidatorInterface $validator, EmployeeRepository $repository): Response
     {
+
+        $data = [
+            'firstname' => 'John',
+            'lastname' => 'Doe',
+            'email' => 'exampol@test.com',
+            'employedAt' => new \DateTimeImmutable('2021-01-01'),
+            'salary' => 10,
+        ];
+
+        $allErrors = [];
+        foreach ($data as $key => $value) {
+            $violationList = $validator->validatePropertyValue(Employee::class, $key, $value);
+            $allErrors = array_merge($allErrors, array_map(fn($violation) => ['field' => $key, 'message' => $violation->getMessage()], iterator_to_array($violationList)));
+        }
+        dd($allErrors);
         $employee = new Employee();
         $employee->setFirstname('John');
         $employee->setLastname('Doe');
