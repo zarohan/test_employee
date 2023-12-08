@@ -3,7 +3,11 @@
 **Instalation**
 
 ``
-docker-compose up
+docker-compose up -d
+``
+
+``
+docker-compose exec php-fpm bash "/var/www/html/start.sh"
 ``
 
 This command will run ./start.sh script which will install all dependencies and apply migrations.

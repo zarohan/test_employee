@@ -11,8 +11,3 @@ RUN apt-get update && \
     mc
 
 RUN docker-php-ext-install pdo pdo_mysql
-
-RUN  curl -sS https://get.symfony.com/cli/installer | bash \
-     && mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
-
-run ./start.sh
