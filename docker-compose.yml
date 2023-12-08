@@ -1,0 +1,33 @@
+version: '3.9'
+services:
+  nginx:
+    hostname: nginx
+    build:
+      context: ./docker/nginx
+    working_dir: /var/www/html
+    ports:
+      - 80:80
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+
+  mysql:
+    image: mysql:latest
+    hostname: sandboxdb
+    environment:
+      MYSQL_ROOT_PASSWORD: sandbox
+      MYSQL_DATABASE: sandbox
+      MYSQL_USER: sandbox
+      MYSQL_PASSWORD: sandbox
+    ports:
+      - 3306:3306
+
+  php-fpm:
+      hostname: fpm
+      build:
+        context: ./docker/php-fpm
+      working_dir: /var/www/html
+      volumes:
+        - ./:/var/www/html
+      depends_on:
+        - mysql

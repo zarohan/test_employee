@@ -55,10 +55,11 @@ class EmployeeController extends AbstractController
         $mandatoryFields = ['firstname', 'lastname', 'email', 'employedAt', 'salary'];
 
         $json = $request->getContent();
-        $errors = $this->validateJsonValues($json);
+        $data = json_decode($json, true) ?? [];
 
+        $errors = $this->validateIncomingValues($data);
         foreach ($mandatoryFields as $field) {
-            if (!array_key_exists($field, json_decode($json, true))) {
+            if (!array_key_exists($field, $data)) {
                 $errors []= ['field' => $field, 'message' => 'Missing field'];
             }
         }
@@ -67,7 +68,7 @@ class EmployeeController extends AbstractController
             return $this->json($errors, Response::HTTP_BAD_REQUEST);
         }
 
-        $employee = $this->hydrateEmployeeFromJson($json);
+        $employee = $this->hydrateEmployeeFromArray($data);
         $this->entityManager->persist($employee);
         $this->entityManager->flush();
 
@@ -98,11 +99,17 @@ class EmployeeController extends AbstractController
             return $this->json(['message' => 'Employee not found'], Response::HTTP_NOT_FOUND);
         }
 
-        if (count($errors = $this->validateJsonValues($request->getContent())) > 0) {
+        $data = json_decode($request->getContent(), true) ?? [];
+
+        if (count($data) === 0) {
+            return $this->json(['message' => 'No data provided'], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (count($errors = $this->validateIncomingValues($data)) > 0) {
             return $this->json($errors, Response::HTTP_BAD_REQUEST);
         }
 
-        $employee = $this->hydrateEmployeeFromJson($request->getContent(), $employee);
+        $employee = $this->hydrateEmployeeFromArray($data, $employee);
 
         $this->entityManager->persist($employee);
         $this->entityManager->flush();
@@ -111,9 +118,8 @@ class EmployeeController extends AbstractController
         return $this->json($resource, Response::HTTP_OK);
     }
 
-    protected function validateJsonValues(string $json): array
+    protected function validateIncomingValues(array $data): array
     {
-        $data = json_decode($json, true);
         $errors = [];
         foreach ($data as $key => $value) {
             if (!property_exists(Employee::class, $key)) {
@@ -131,9 +137,8 @@ class EmployeeController extends AbstractController
         return $errors;
     }
 
-    protected function hydrateEmployeeFromJson(string $json, ?Employee $employee = null): Employee
+    protected function hydrateEmployeeFromArray(array $data, ?Employee $employee = null): Employee
     {
-        $data = json_decode($json, true);
         $employee = $employee ?: new Employee();
 
         $employee
