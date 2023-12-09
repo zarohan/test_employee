@@ -12,3 +12,6 @@ mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 
 symfony console doctrine:database:create --if-not-exists
 symfony console doctrine:migrations:migrate --no-interaction
+
+symfony console --env=test doctrine:database:create --if-not-exists
+symfony console --env=test doctrine:schema:create --no-interaction
