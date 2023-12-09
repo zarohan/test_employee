@@ -5,9 +5,10 @@ php -r "unlink('composer-setup.php');"
 
 mv composer.phar /usr/local/bin/composer
 
+composer install
+
 curl -sS https://get.symfony.com/cli/installer | bash
 mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 
 symfony console doctrine:database:create --if-not-exists
 symfony console doctrine:migrations:migrate --no-interaction
-

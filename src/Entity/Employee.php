@@ -37,7 +37,8 @@ class Employee
 
     #[ORM\Column(type: Types::DECIMAL, precision: 16, scale: 4)]
     #[Assert\GreaterThanOrEqual(100)]
-    private ?string $salary = null;
+    #[Assert\Type(type: 'numeric')]
+    private ?float $salary = null;
 
     public function getId(): ?int
     {
