@@ -13,10 +13,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class IndexController extends AbstractController
 {
     #[Route('/')]
-    public function homepage(ValidatorInterface $validator): Response
+    public function homepage(): Response
     {
-        $violationList = $validator->validatePropertyValue(Employee::class, 'salary', 123);
-        dd($violationList);
         return $this->render('test.html.twig');
     }
 }

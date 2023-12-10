@@ -122,6 +122,7 @@ class EmployeeController extends AbstractController
     )]
     public function create(Request $request): Response
     {
+        /* TODO: add idempotency check */
         $mandatoryFields = ['firstname', 'lastname', 'email', 'employedAt', 'salary'];
 
         $json = $request->getContent();
@@ -291,7 +292,7 @@ class EmployeeController extends AbstractController
 
     protected function errorResponse(int $code, string $message, array $data = []): Response
     {
-        // TODO: Create a class for error response?
+        // TODO: Create a resource class for error response?
         $responseData = ['message' => $message];
         if (count($data)) {
             $responseData['data'] = $data;
